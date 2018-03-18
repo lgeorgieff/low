@@ -1,10 +1,12 @@
 #!/usr/bin/env sh
 
 MONGODB_CONTAINER_NAME="low_mongodb"
+HTTP_CONTAINER_NAME="low_http"
 COMMAND=""
 DOCKER_IMAGE=""
 
 SCRIPT_FOLDER="$(dirname $(realpath "${0}"))"
+LOW_ROOT="${SCRIPT_FOLDER}/../"
 
 help() {
     cat << EOF
@@ -16,7 +18,8 @@ usage: $(basename ${0}) [build IMG | start IMG | stop IMG] [--help | -h]
   --help | -h    Prints this dialog
 
 Supported images (IMG) are:
-  mongodb
+  mongodb (contains the mongodb service for this application)
+  http (build and run the HTTP component)
 
 EOF
 }
@@ -27,11 +30,26 @@ stop_mongodb() {
 }
 
 build_mongodb() {
-    sudo docker build -t low_mongodb "${SCRIPT_FOLDER}/mongodb/"
+    sudo docker build -t "${MONGODB_CONTAINER_NAME}" "${SCRIPT_FOLDER}/mongodb/"
 }
 
-run_mongodb() {
-    sudo docker run --name low_mongodb --detach --publish 27017:27017 low_mongodb
+start_mongodb() {
+    sudo docker run --name "${MONGODB_CONTAINER_NAME}" --detach --publish 27017:27017 low_mongodb
+}
+
+stop_http() {
+    sudo docker container stop "${HTTP_CONTAINER_NAME}"
+    sudo docker container rm "${HTTP_CONTAINER_NAME}"
+}
+
+build_http() {
+    sudo docker build -t "${HTTP_CONTAINER_NAME}" "${SCRIPT_FOLDER}/http/"
+}
+
+start_http() {
+    sudo docker run --name "${HTTP_CONTAINER_NAME}" --tty --interactive \
+         --mount type=bind,source="${LOW_ROOT}",target=/project/low \
+         "${HTTP_CONTAINER_NAME}"
 }
 
 main() {
@@ -41,10 +59,11 @@ main() {
         then
             help
             exit 0
-        elif [ "${arg}" = "build" ] || [ "${arg}" = "run" ] || [ "${arg}" = "stop" ]
+        elif [ "${COMMAND}" = "" ] && ([ "${arg}" = "build" ] || [ "${arg}" = "start" ] || \
+                                           [ "${arg}" = "stop" ])
         then
             COMMAND="$arg"
-        elif [ "${COMMAND}" != "" ] && [ "${arg}" = "mongodb" ]
+        elif [ "${COMMAND}" != "" ] && ([ "${arg}" = "mongodb" ] || [ "${arg}" = "http" ] )
         then
             DOCKER_IMAGE="${arg}"
         else
