@@ -12,6 +12,8 @@ RUN apt-get update && apt-get -y install \
 
 # Copy a .bashrc to the image.
 COPY ./.bashrc /root/.bashrc
+# Copy a .emacs to the image.
+COPY ./.emacs /root/.emacs
 
 # Build proxygen and all its dependencies.
 RUN mkdir -p /pre_build/
