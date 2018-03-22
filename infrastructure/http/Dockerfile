@@ -5,6 +5,7 @@ RUN apt-get update && apt-get -y install \
     sudo \
     git \
     emacs \
+    doxygen \
     clang-5.0 \
     clang-format-5.0 \
     clang-tidy-5.0 \
@@ -16,11 +17,14 @@ COPY ./.bashrc /root/.bashrc
 COPY ./.emacs /root/.emacs
 
 # Build proxygen and all its dependencies.
-RUN mkdir -p /pre_build/
-RUN git clone https://github.com/facebook/proxygen.git /pre_build/proxygen
-WORKDIR /pre_build/proxygen/proxygen
-RUN ./deps.sh
-RUN ./reinstall.sh
+RUN mkdir -p /pre_built/
+RUN git clone https://github.com/facebook/proxygen.git /pre_built/proxygen
+WORKDIR /pre_built/proxygen
+RUN ./proxygen/deps.sh
+RUN ./proxygen/reinstall.sh
+
+# Generate proxygen's documentation
+RUN doxygen Doxyfile
 
 # Create the mountpoint for low's folder structure and make it the working directory.
 RUN mkdir -p /project/low
