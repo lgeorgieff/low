@@ -73,6 +73,13 @@ main() {
         fi
     done
 
+    if [ -z "${COMMAND}" ] || [ -z "${DOCKER_IMAGE}" ];
+    then
+	echo "No command or image name found" >&2
+        help >&2
+        exit 1
+    fi
+
     "${COMMAND}_${DOCKER_IMAGE}"
 }
 
