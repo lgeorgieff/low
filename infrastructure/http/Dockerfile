@@ -30,5 +30,8 @@ RUN doxygen Doxyfile
 RUN mkdir -p /project/low
 WORKDIR /project/low
 
+# Expose the TCP port 80 for HTTP
+EXPOSE 80/tcp
+
 # Start bash as default command.
 CMD /bin/bash

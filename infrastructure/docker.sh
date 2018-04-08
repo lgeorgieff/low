@@ -49,7 +49,7 @@ build_http() {
 start_http() {
     sudo docker run --name "${HTTP_CONTAINER_NAME}" --tty --interactive \
          --mount type=bind,source="${LOW_ROOT}",target=/project/low \
-         "${HTTP_CONTAINER_NAME}"
+         --publish 8080:80/tcp "${HTTP_CONTAINER_NAME}"
 }
 
 main() {
