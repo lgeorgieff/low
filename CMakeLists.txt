@@ -10,17 +10,20 @@ set(low_VERSION ${low_MAJOR_VERSION}.${low_MINOR_VERSION}.${low_PATCH_VERSION})
 message("-- Project: ${PROJECT_NAME}@${low_VERSION}")
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-  set(warnings "-Wall -Wextra")
+  set(CXX_WARNINGS "-Wall -Wextra")
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-  set(warnings "-Wpedantic")
+  set(CXX_WARNINGS "-Wpedantic")
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-  set(warnings "/W4 /WX /EHsc")
+  set(CXX_WARNINGS "/W4 /WX /EHsc")
 endif()
+
+message("-- Warnings: ${CXX_WARNINGS}")
+
 if (NOT CONFIGURED_ONCE)
-    set(CMAKE_CXX_FLAGS "${warnings}"
-        CACHE STRING "Flags used by the compiler during all build types." FORCE)
-    set(CMAKE_C_FLAGS   "${warnings}"
-        CACHE STRING "Flags used by the compiler during all build types." FORCE)
+  set(CMAKE_CXX_FLAGS "${CXX_WARNINGS}"
+    CACHE STRING "Flags used by the compiler during all build types." FORCE)
+  set(CMAKE_C_FLAGS   "${CXX_WARNINGS}"
+    CACHE STRING "Flags used by the compiler during all build types." FORCE)
 endif()
 
 set(CMAKE_BINARY_DIR ${CMAKE_SOURCE_DIR}/build)
