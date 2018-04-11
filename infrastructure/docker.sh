@@ -34,7 +34,7 @@ build_mongodb() {
 }
 
 start_mongodb() {
-    sudo docker run --name "${MONGODB_CONTAINER_NAME}" --detach --publish 27017:27017 low_mongodb
+    sudo docker run --name "${MONGODB_CONTAINER_NAME}" --detach --publish 127.0.0.1:27017:27017 low_mongodb
 }
 
 stop_http() {
