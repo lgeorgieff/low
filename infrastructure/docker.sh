@@ -8,6 +8,8 @@ DOCKER_IMAGE=""
 SCRIPT_FOLDER="$(dirname $(realpath "${0}"))"
 LOW_ROOT="${SCRIPT_FOLDER}/../"
 
+MONGODB_NETWORK="low_mongodb_net"
+
 help() {
     cat << EOF
 usage: $(basename ${0}) [build IMG | start IMG | stop IMG] [--help | -h]
@@ -24,6 +26,12 @@ Supported images (IMG) are:
 EOF
 }
 
+create_mongodb_network_if_required() {
+    if [ -z $(sudo docker network ls --filter name="^${MONGODB_NETWORK}$" --quiet) ]
+    then sudo docker network create "${MONGODB_NETWORK}"
+    fi
+}
+
 stop_mongodb() {
     sudo docker container stop "${MONGODB_CONTAINER_NAME}"
     sudo docker container rm "${MONGODB_CONTAINER_NAME}"
@@ -34,7 +42,10 @@ build_mongodb() {
 }
 
 start_mongodb() {
-    sudo docker run --name "${MONGODB_CONTAINER_NAME}" --detach --publish 127.0.0.1:27017:27017 low_mongodb
+    create_mongodb_network_if_required
+    sudo docker run --name "${MONGODB_CONTAINER_NAME}" --detach \
+         --publish 127.0.0.1:27017:27017 --net "${MONGODB_NETWORK}" \
+         low_mongodb
 }
 
 stop_http() {
@@ -47,9 +58,11 @@ build_http() {
 }
 
 start_http() {
+    create_mongodb_network_if_required
     sudo docker run --name "${HTTP_CONTAINER_NAME}" --tty --interactive \
          --mount type=bind,source="${LOW_ROOT}",target=/project/low \
-         --publish 8080:80/tcp "${HTTP_CONTAINER_NAME}"
+         --publish 8080:80/tcp --net "${MONGODB_NETWORK}" \
+         "${HTTP_CONTAINER_NAME}"
 }
 
 main() {
