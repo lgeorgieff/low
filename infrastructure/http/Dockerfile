@@ -36,6 +36,14 @@ WORKDIR /pre_built/mongoc/mongo-c-driver-1.9.4
 RUN ./configure --disable-automatic-init-and-cleanup
 RUN make && make install
 
+# Install mongocxx
+RUN mkdir /pre_built/mongocxx
+RUN git clone -b releases/stable --single-branch \
+    https://github.com/mongodb/mongo-cxx-driver.git /pre_built/mongocxx/mongo-cxx-driver-stable
+WORKDIR /pre_built/mongocxx/mongo-cxx-driver-stable/build
+RUN cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local ..
+RUN make && make install
+
 # Build proxygen and all its dependencies.
 RUN git clone https://github.com/facebook/proxygen.git /pre_built/proxygen
 WORKDIR /pre_built/proxygen
