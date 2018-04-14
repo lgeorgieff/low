@@ -11,6 +11,7 @@ For normal installation you need to:
 1. cd low
 1. ./infrastructure/docker.sh build http
 1. ./infrastructure/docker.sh build mongodb
+1. ./infrastructure/docker.sh start mongodb
 1. ./infrastructure/docker.sh start http
 1. mkdir build
 1. cd build
