@@ -38,10 +38,19 @@ RUN make && make install
 
 # Install mongocxx
 RUN mkdir /pre_built/mongocxx
-RUN git clone -b releases/stable --single-branch \
+RUN git clone --branch releases/stable --single-branch \
     https://github.com/mongodb/mongo-cxx-driver.git /pre_built/mongocxx/mongo-cxx-driver-stable
 WORKDIR /pre_built/mongocxx/mongo-cxx-driver-stable/build
 RUN cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local ..
+RUN make && make install
+
+# Install jsoncpp
+RUN mkdir /pre_built/jsoncpp
+RUN git clone --branch 1.8.4 --single-branch \
+    https://github.com/open-source-parsers/jsoncpp.git /pre_built/jsoncpp/jsoncpp
+RUN mkdir /pre_built/jsoncpp/jsoncpp/build
+WORKDIR /pre_built/jsoncpp/jsoncpp/build
+RUN cmake -DCMAKE_BUILD_TYPE=RELEASE -DBUILD_STATIC_LIBS=OFF -DBUILD_SHARED_LIBS=ON ..
 RUN make && make install
 
 # Build proxygen and all its dependencies.
