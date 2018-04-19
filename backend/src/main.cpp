@@ -83,8 +83,7 @@ public:
 int main(const int argc, const char **argv) {
   low::config::json_reader config_reader("../config/main_config.json"); // TODO: get cmd option from google library
   config_reader.load();
-
-  // TODO: use glog for logging
+  // TODO: move main.cpp one level upwards
 
   proxygen::HTTPServerOptions options;
   options.threads = config_reader.http_config().resources_http_threads();
