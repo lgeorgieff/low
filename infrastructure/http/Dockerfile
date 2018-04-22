@@ -1,4 +1,4 @@
-FROM ubuntu:16.04
+FROM ubuntu:18.04
 
 # Install all required software for building and configuring the project.
 RUN apt-get update && apt-get -y install \
