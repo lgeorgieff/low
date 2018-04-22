@@ -7,9 +7,9 @@ RUN apt-get update && apt-get -y install \
     emacs \
     curl \
     doxygen \
-    clang-5.0 \
-    clang-format-5.0 \
-    clang-tidy-5.0 \
+    clang-6.0 \
+    clang-format-6.0 \
+    clang-tidy-6.0 \
     cmake
 
 # Install all dependencies for the mongoc client

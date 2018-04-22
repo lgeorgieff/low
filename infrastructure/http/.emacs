@@ -12,7 +12,7 @@
  '(tool-bar-mode nil))
 
 ;; C++ settings
-(load "/usr/share/emacs/site-lisp/clang-format-5.0/clang-format.el")
+(load "/usr/share/emacs/site-lisp/clang-format-6.0/clang-format.el")
 (global-set-key [C-M-tab] 'clang-format-region)
 
 (add-hook 'c-mode-common-hook
