@@ -10,6 +10,7 @@ add_executable(low_service
 
 find_package(libmongocxx REQUIRED)
 find_package(libbsoncxx REQUIRED)
+find_package(gflags REQUIRED)
 
 include_directories(${LIBMONGOCXX_INCLUDE_DIRS})
 include_directories(${LIBBSONCXX_INCLUDE_DIRS})
@@ -25,3 +26,5 @@ target_link_libraries(low_service jsoncpp)
 
 target_link_libraries(low_service ${LIBMONGOCXX_LIBRARIES})
 target_link_libraries(low_service ${LIBBSONCXX_LIBRARIES})
+
+target_link_libraries(low_service gflags)

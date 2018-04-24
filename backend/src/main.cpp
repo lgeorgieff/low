@@ -1,6 +1,6 @@
 #include "../config/json_reader.hpp"
 
-#include "../config/json_reader.hpp"
+#include <gflags/gflags.h>
 
 #include <proxygen/httpserver/HTTPServer.h>
 #include <proxygen/httpserver/HTTPServerOptions.h>
@@ -12,11 +12,20 @@
 #include <mongocxx/client.hpp>
 #include <mongocxx/instance.hpp>
 
-#include <cstddef>
 #include <vector>
-#include <set>
 #include <string>
 #include <iostream>
+
+using std::string;
+using std::cout;
+using std::endl;
+using std::vector;
+using std::thread;
+
+const string CONFIG_FILE_PATH_DEFAULT("../config/main_config.json");
+DEFINE_string(config, CONFIG_FILE_PATH_DEFAULT, "Path to configuration file");
+const string USAGE_TEXT("low service implementing ...");
+const string APPLICATION_VERSION("0.0.1");
 
 mongocxx::instance inst{};
 
@@ -80,10 +89,13 @@ public:
   }
 };
 
-int main(const int argc, const char **argv) {
-  low::config::json_reader config_reader("../config/main_config.json"); // TODO: get cmd option from google library
+int main(int argc, char **argv) {
+  gflags::SetUsageMessage(USAGE_TEXT);
+  gflags::SetVersionString(APPLICATION_VERSION);
+  gflags::ParseCommandLineFlags(&argc, &argv, true);
+
+  low::config::json_reader config_reader(FLAGS_config);
   config_reader.load();
-  // TODO: move main.cpp one level upwards
 
   proxygen::HTTPServerOptions options;
   options.threads = config_reader.http_config().resources_http_threads();
@@ -97,20 +109,21 @@ int main(const int argc, const char **argv) {
       proxygen::RequestHandlerChain().addThen<HelloWorldHandlerFactory>().build();
 
   proxygen::HTTPServer server(std::move(options));
-  std::vector<proxygen::HTTPServer::IPConfig> IPs = {
+  vector<proxygen::HTTPServer::IPConfig> IPs = {
       {folly::SocketAddress(config_reader.http_config().net_external_address(),
                             config_reader.http_config().net_docker_port(), true),
        proxygen::HTTPServer::Protocol::HTTP}};
   server.bind(IPs);
-  std::cout << ">> server.bind(IPs);" << std::endl;
+  cout << ">> server.bind(IPs);" << endl;
 
   // Start HTTPServer mainloop in a separate thread
-  std::thread t([&] () {
+  thread t([&] () {
     server.start();
   });
-  std::cout << ">> server.start();" << std::endl;
+  cout << ">> server.start();" << endl;
 
   t.join();
 
+  gflags::ShutDownCommandLineFlags();
   return 0;
 }
