@@ -17,7 +17,8 @@ RUN apt-get update && apt-get -y install \
     autoconf \
     autoconf-archive \
     libtool \
-    cmake
+    cmake \
+    gdb
 
 ### Install all dependencies for the mongoc client.
 RUN apt-get update && apt-get -y install \

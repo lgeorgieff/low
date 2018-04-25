@@ -62,6 +62,7 @@ start_http() {
     sudo docker run --name "${HTTP_CONTAINER_NAME}" --tty --interactive \
          --mount type=bind,source="${LOW_ROOT}",target=/project/low \
          --publish 8080:80/tcp --net "${MONGODB_NETWORK}" \
+         --cap-add=SYS_PTRACE --security-opt seccomp=unconfined \
          "${HTTP_CONTAINER_NAME}"
 }
 
