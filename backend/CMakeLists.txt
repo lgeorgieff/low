@@ -26,5 +26,3 @@ target_link_libraries(low_service jsoncpp)
 
 target_link_libraries(low_service ${LIBMONGOCXX_LIBRARIES})
 target_link_libraries(low_service ${LIBBSONCXX_LIBRARIES})
-
-target_link_libraries(low_service gflags)

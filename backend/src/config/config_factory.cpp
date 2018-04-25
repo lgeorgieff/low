@@ -57,24 +57,32 @@ void config_factory::set_compression_types(class http_config &config, const set<
   config.compression_types(value);
 }
 
-void config_factory::set_db_name(class mongodb_config config, const string &value) {
+void config_factory::set_db_name(class mongodb_config &config, const string &value) {
   config.db_name(value);
 }
 
-void config_factory::set_net_docker_name(class mongodb_config config, const string &value) {
+void config_factory::set_net_docker_name(class mongodb_config &config, const string &value) {
   config.net_docker_name(value);
 }
 
-void config_factory::set_net_external_port(class mongodb_config config, const uint16_t &value) {
+void config_factory::set_net_external_port(class mongodb_config &config, const uint16_t &value) {
   config.net_external_port(value);
 }
 
-void config_factory::set_net_docker_port(class mongodb_config config, const uint16_t &value) {
+void config_factory::set_net_docker_port(class mongodb_config &config, const uint16_t &value) {
   config.net_docker_port(value);
 }
 
-void config_factory::set_net_docker_nw_name(class mongodb_config config, const string &value) {
+void config_factory::set_net_docker_nw_name(class mongodb_config &config, const string &value) {
   config.net_docker_nw_name(value);
+}
+
+void config_factory::set_logging_log_to_stderr(class http_config &config, const bool &value) {
+  config.log_to_stderr(value);
+}
+
+void config_factory::set_logging_log_dir(class http_config &config, const std::string &value) {
+  config.log_dir(value);
 }
 
 }  // namespace config

@@ -28,6 +28,8 @@ class http_config {
   uint32_t compression_minimum_size_bytes() const;
   int8_t compression_level() const;
   std::set<std::string> compression_types() const;
+  bool log_to_stderr() const;
+  std::string log_dir() const;
 
  public:
   const static std::string COMPRESSION_TYPE_APPLICATION_JAVASCRIPT;
@@ -54,6 +56,8 @@ class http_config {
   void compression_minimum_size_bytes(const uint32_t &value);
   void compression_level(const int8_t &value);
   void compression_types(const std::set<std::string> &value);
+  void log_to_stderr(const bool &value);
+  void log_dir(const std::string &value);
   friend class config_factory;
 
  private:
@@ -68,6 +72,8 @@ class http_config {
   uint32_t compression_minimum_size_bytes_;
   int8_t compression_level_;
   std::set<std::string> compression_types_;
+  bool log_to_stderr_;
+  std::string log_dir_;
 };  // class http_config
 
 }  // namespace config

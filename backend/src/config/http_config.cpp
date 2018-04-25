@@ -39,6 +39,12 @@ int8_t http_config::compression_level() const { return compression_level_; }
 
 set<string> http_config::compression_types() const { return compression_types_; }
 
+bool http_config::log_to_stderr() const { return log_to_stderr_; }
+
+string http_config::log_dir() const {
+  return log_dir_;
+}
+
 void http_config::net_docker_name(const string &value) {
   if (!value.size()) throw new config_error("net_docker_name must not be empty");
   net_docker_name_ = value;
@@ -91,6 +97,12 @@ void http_config::compression_types(const set<string> &value) {
   for (const string &type : value)
     if (!value.size()) throw new config_error("compresison type  must not be empty");
   compression_types_ = value;
+}
+
+void http_config::log_to_stderr(const bool &value) { log_to_stderr_ = value; }
+
+void http_config::log_dir(const string &value) {
+  log_dir_ = value;
 }
 
 const string http_config::COMPRESSION_TYPE_APPLICATION_JAVASCRIPT{"application/javascript"};

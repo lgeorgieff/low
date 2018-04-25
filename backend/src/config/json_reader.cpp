@@ -61,6 +61,9 @@ bool get_string(const Value &owner, const string &field_name, string &result) {
   if(owner.isMember(field_name) && owner[field_name].isString()) {
     result = owner[field_name].asString();
     return true;
+  } else if(owner.isMember(field_name) && owner[field_name].isNull()) {
+    result = "";
+    return true;
   }
   return false;
 }
@@ -123,6 +126,8 @@ bool get_strset(const Value &owner, const string &field_name, set<string> &resul
 
     result = std::move(tmp);
     return true;
+  } else if (owner.isMember(field_name) && owner[field_name].isNull()) {
+    result = set<string>();
   }
   return false;
 }
@@ -223,6 +228,15 @@ void json_reader::load() {
   set<string> http_ccompression_types;
   if (!get_strset(http_ccompression, "types", http_ccompression_types))
     throw config_error("http/resources must include an array of numbers called \"types\"");
+  Value http_logging;
+  if (!get_object(http, "logging", http_logging))
+    throw config_error("http must include an object called \"logging\"");
+  bool http_logging_log_to_stderr;
+  if (!get_bool(http_logging, "log_to_stderr", http_logging_log_to_stderr))
+    throw config_error("http/logging must include a boolean called \"log_to_stderr\"");
+  string http_logging_log_dir;
+  if (!get_string(http_logging, "log_dir", http_logging_log_dir))
+    throw config_error("http/logging must include a string called \"log_dir\"");
 
   http_config_ = new class http_config;
   set_net_docker_name(*http_config_, http_net_docker_name);
@@ -237,6 +251,8 @@ void json_reader::load() {
   set_compression_minimum_size_bytes(*http_config_, http_ccompression_minimum_size_bytes);
   set_compression_level(*http_config_, http_ccompression_level);
   set_compression_types(*http_config_, http_ccompression_types);
+  set_logging_log_to_stderr(*http_config_, http_logging_log_to_stderr);
+  set_logging_log_dir(*http_config_, http_logging_log_dir);
 
   mongodb_config_ = new class mongodb_config;
   set_db_name(*mongodb_config_, mongodb_db_name);

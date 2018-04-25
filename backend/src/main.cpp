@@ -1,6 +1,7 @@
 #include "../config/json_reader.hpp"
 
 #include <gflags/gflags.h>
+#include <glog/logging.h>
 
 #include <proxygen/httpserver/HTTPServer.h>
 #include <proxygen/httpserver/HTTPServerOptions.h>
@@ -90,12 +91,27 @@ public:
 };
 
 int main(int argc, char **argv) {
+  // Initialize Google's logging library.
+  google::InitGoogleLogging(argv[0]);
+
+  // Initialize Google flag library.
   gflags::SetUsageMessage(USAGE_TEXT);
   gflags::SetVersionString(APPLICATION_VERSION);
   gflags::ParseCommandLineFlags(&argc, &argv, true);
 
+  // Load json configuration for this application.
   low::config::json_reader config_reader(FLAGS_config);
   config_reader.load();
+
+  if (config_reader.http_config().log_to_stderr() &&
+      !config_reader.http_config().log_dir().empty()) {
+    FLAGS_alsologtostderr = true;
+    FLAGS_log_dir = config_reader.http_config().log_dir();
+  } else {
+    if (config_reader.http_config().log_to_stderr()) FLAGS_logtostderr = true;
+    if (!config_reader.http_config().log_dir().empty())
+      FLAGS_log_dir = config_reader.http_config().log_dir();
+  }
 
   proxygen::HTTPServerOptions options;
   options.threads = config_reader.http_config().resources_http_threads();
@@ -108,19 +124,19 @@ int main(int argc, char **argv) {
   options.handlerFactories =
       proxygen::RequestHandlerChain().addThen<HelloWorldHandlerFactory>().build();
 
+  // Set up an HTTP server instance.
   proxygen::HTTPServer server(std::move(options));
   vector<proxygen::HTTPServer::IPConfig> IPs = {
       {folly::SocketAddress(config_reader.http_config().net_external_address(),
                             config_reader.http_config().net_docker_port(), true),
        proxygen::HTTPServer::Protocol::HTTP}};
   server.bind(IPs);
-  cout << ">> server.bind(IPs);" << endl;
+  LOG(INFO) << "HTTP server bound to " << config_reader.http_config().net_external_address() << ":"
+            << config_reader.http_config().net_docker_port();
 
-  // Start HTTPServer mainloop in a separate thread
-  thread t([&] () {
-    server.start();
-  });
-  cout << ">> server.start();" << endl;
+  // Start HTTPServer mainloop in a separate thread.
+  thread t([&]() { server.start(); });
+  LOG(INFO) << "server started";
 
   t.join();
 

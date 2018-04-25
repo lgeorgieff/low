@@ -29,12 +29,14 @@ public:
   static void set_compression_minimum_size_bytes(class http_config &config, const uint32_t &value);
   static void set_compression_level(class http_config &config, const int8_t &value);
   static void set_compression_types(class http_config &config, const std::set<std::string> &value);
+  static void set_logging_log_to_stderr(class http_config &config, const bool &value);
+  static void set_logging_log_dir(class http_config &config, const std::string &value);
 
-  static void set_db_name(class mongodb_config config, const std::string &value);
-  static void set_net_docker_name(class mongodb_config config, const std::string &value);
-  static void set_net_external_port(class mongodb_config config, const uint16_t &value);
-  static void set_net_docker_port(class mongodb_config config, const uint16_t &value);
-  static void set_net_docker_nw_name(class mongodb_config config, const std::string &value);
+  static void set_db_name(class mongodb_config &config, const std::string &value);
+  static void set_net_docker_name(class mongodb_config &config, const std::string &value);
+  static void set_net_external_port(class mongodb_config &config, const uint16_t &value);
+  static void set_net_docker_port(class mongodb_config &config, const uint16_t &value);
+  static void set_net_docker_nw_name(class mongodb_config &config, const std::string &value);
 }; // class config_factory
 
 } // namespace config

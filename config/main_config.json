@@ -37,6 +37,10 @@
                 "text/plain",
                 "text/xml"
             ]
+        },
+        "logging": {
+            "log_to_stderr": true,
+            "log_dir": null
         }
     }
 }
