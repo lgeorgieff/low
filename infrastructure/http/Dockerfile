@@ -115,6 +115,15 @@ RUN make install
 WORKDIR /pre_built/proxygen/proxygen
 RUN doxygen Doxyfile
 
+### Build googletest and googlemock
+RUN mkdir /pre_built/googletest/
+RUN git clone --branch release-1.8.0 --single-branch \
+    https://github.com/google/googletest.git /pre_built/googletest/googletest
+RUN mkdir /pre_built/googletest/googletest/build
+WORKDIR /pre_built/googletest/googletest/build
+RUN cmake -DCMAKE_BUILD_TYPE=RELEASE -DBUILD_SHARED_LIBS=ON ..
+RUN make && make install
+
 ### Create the mountpoint for low's folder structure and make it the working directory.
 RUN mkdir -p /project/low
 WORKDIR /project/low
