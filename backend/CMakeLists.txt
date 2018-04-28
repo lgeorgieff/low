@@ -7,3 +7,4 @@ include_directories(${LIBBSONCXX_INCLUDE_DIRS})
 include_directories(src/config)
 
 add_subdirectory(src)
+add_subdirectory(test)

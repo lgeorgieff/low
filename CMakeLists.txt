@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
 
 project(low CXX)
 
@@ -34,5 +34,11 @@ set(DOCUMENTATION_DIR ${CMAKE_SOURCE_DIR}/doc/)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
+
+option(GENERATE_TESTS "Build tests wth googletest" TRUE)
+
+if(GENERATE_TESTS)
+  enable_testing()
+endif()
 
 add_subdirectory(backend)
