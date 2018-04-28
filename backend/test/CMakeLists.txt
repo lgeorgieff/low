@@ -6,7 +6,7 @@ if(GENERATE_TESTS)
     config/http_config.cpp
     config/mongodb_config.cpp
     )
-  add_test(NAME config_unit_tests COMMAND config_unit_tests)
+  add_test(NAME config COMMAND config_unit_tests)
 
   find_package(GTest REQUIRED)
 
