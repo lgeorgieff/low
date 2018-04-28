@@ -17,7 +17,7 @@ For normal installation you need to:
 1. cd build
 1. cmake -DCMAKE_BUILD_TYPE=Debug ..
 1. make
-1. make test ARGS=-V
+1. ARGS=--verbose make test
 1. ./bin/low_service
 
 # License
