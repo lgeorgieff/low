@@ -1,9 +1,18 @@
-#include "gtest/gtest.h"
+#include "../../src/config/config_error.hpp"
 
-TEST(AlwaysPass13, Negative) {
-  EXPECT_EQ(1, 1);
+#include <gtest/gtest.h>
+#include <string>
+
+using low::config::config_error;
+using std::string;
+
+TEST(config_error, constructor) {
+  config_error{""};
+  SUCCEED();
 }
 
-TEST(AlwaysPass23, Negative) {
-  EXPECT_EQ(1, 1);
+TEST(config_error, what_returns_error_message) {
+  const string MESSAGE{"error message"};
+  config_error err{MESSAGE};
+  ASSERT_STREQ(MESSAGE.c_str(), err.what());
 }

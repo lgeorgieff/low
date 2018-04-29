@@ -7,6 +7,8 @@ if(GENERATE_TESTS)
     config/config_error.cpp
     config/http_config.cpp
     config/mongodb_config.cpp
+
+    ../src/config/config_error.cpp
     )
   target_link_libraries(config_unit_tests ${GTEST_BOTH_LIBRARIES})
   add_test(NAME config COMMAND config_unit_tests)
