@@ -14,5 +14,5 @@ TEST(config_error, constructor) {
 TEST(config_error, what_returns_error_message) {
   const string MESSAGE{"error message"};
   config_error err{MESSAGE};
-  ASSERT_STREQ(MESSAGE.c_str(), err.what());
+  EXPECT_STREQ(MESSAGE.c_str(), err.what());
 }
