@@ -2,7 +2,6 @@ if(GENERATE_TESTS)
   find_package(GTest REQUIRED)
 
   add_executable(config_unit_tests
-    config/config_factory.cpp
     config/json_reader.cpp
     config/config_error.cpp
     config/http_config.cpp
