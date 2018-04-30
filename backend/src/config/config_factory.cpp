@@ -11,6 +11,10 @@ using std::chrono::milliseconds;
 namespace low {
 namespace config {
 
+config_factory::config_factory() {}
+
+config_factory::~config_factory() {}
+
 void config_factory::set_net_docker_name(class http_config &config, const string &value) {
   config.net_docker_name(value);
 }
