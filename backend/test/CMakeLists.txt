@@ -9,6 +9,9 @@ if(GENERATE_TESTS)
     config/mongodb_config.cpp
 
     ../src/config/config_error.cpp
+    ../src/config/http_config.cpp
+    ../src/config/mongodb_config.cpp
+    ../src/config/config_factory.cpp
     )
   target_link_libraries(config_unit_tests ${GTEST_BOTH_LIBRARIES})
   add_test(NAME config COMMAND config_unit_tests)
