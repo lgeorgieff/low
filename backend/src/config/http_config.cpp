@@ -115,7 +115,7 @@ const string http_config::COMPRESSION_TYPE_APPLICATION_XHTML_XML{"application/xh
 
 const string http_config::COMPRESSION_TYPE_APPLICATION_XML{"application/xml"};
 
-const string http_config::COMPRESSION_TYPE_APPLICATION_XML_RSS{"application/xml+rss"};
+const string http_config::COMPRESSION_TYPE_APPLICATION_XML_RSS{"application/rss+xml"};
 
 const string http_config::COMPRESSION_TYPE_TEXT_CSS{"text/css"};
 
