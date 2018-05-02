@@ -2,8 +2,7 @@
 #include "../../src/config/config_factory.hpp"
 #include "../../src/config/mongodb_config.hpp"
 
-#include "gtest/gtest.h"
-
+#include <gtest/gtest.h>
 #include <chrono>
 #include <cstdint>
 #include <set>
@@ -66,7 +65,7 @@ class http_config_f : public ::testing::Test {
     }
 
     static void set_compression_types(low::config::http_config &config,
-                                      const std::set<std::string> &value) {
+                                      const std::set<string> &value) {
       low::config::config_factory::set_compression_types(config, value);
     }
 

@@ -2,11 +2,8 @@
 #include "../../src/config/config_factory.hpp"
 #include "../../src/config/mongodb_config.hpp"
 
-#include "gtest/gtest.h"
-
-#include <chrono>
+#include <gtest/gtest.h>
 #include <cstdint>
-#include <set>
 #include <string>
 
 using std::string;

@@ -11,8 +11,10 @@ if(GENERATE_TESTS)
     ../src/config/http_config.cpp
     ../src/config/mongodb_config.cpp
     ../src/config/config_factory.cpp
+    ../src/config/json_reader.cpp
     )
   target_link_libraries(config_unit_tests ${GTEST_BOTH_LIBRARIES})
+  target_link_libraries(config_unit_tests jsoncpp)
   add_test(NAME config COMMAND config_unit_tests)
 
   include_directories(${GTEST_INCLUDE_DIRS})
