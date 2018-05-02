@@ -34,18 +34,18 @@ bool path_is_file(const string & path) {
 
 Value load_json_file(const string &file_path) {
   if(!path_exists(file_path)) {
-    throw new low::config::config_error("File \"" + file_path + "\" not found");
+    throw low::config::config_error("File \"" + file_path + "\" not found");
   } else if (!path_is_file(file_path)) {
-    throw new low::config::config_error("Path \"" + file_path + "\" must be refer to a file");
+    throw low::config::config_error("Path \"" + file_path + "\" must be refer to a file");
   }
-  
+
   Json::CharReaderBuilder builder;
   Value root;
   string errors;
   ifstream json_file_stream(file_path, std::ifstream::binary);
   if (!Json::parseFromStream(builder, json_file_stream, &root, &errors))
-    throw new low::config::config_error("Could not load configuration from \"" + file_path +
-                                        "\"\n" + errors);
+    throw low::config::config_error("Could not load configuration from \"" + file_path + "\"\n" +
+                                    errors);
   return root;
 }
 
@@ -142,7 +142,7 @@ json_reader::json_reader(const string &json_file_path)
 
 const http_config &json_reader::http_config() const {
   if (!http_config_) {
-    throw new config_error(
+    throw config_error(
         "json_reader::load() must be called before calling json_reader::http_config()");
   }
   return *http_config_;
@@ -150,7 +150,7 @@ const http_config &json_reader::http_config() const {
 
 const mongodb_config &json_reader::mongodb_config() const {
   if (!http_config_) {
-    throw new config_error(
+    throw config_error(
         "json_reader::load() must be called before calling json_reader::mongodb_config()");
   }
   return *mongodb_config_;
@@ -159,7 +159,7 @@ const mongodb_config &json_reader::mongodb_config() const {
 void json_reader::load() {
   Value root(load_json_file(json_file_path_));
 
-  if (!root.isObject()) throw new config_error("Config root must be a json object");
+  if (!root.isObject()) throw config_error("Config root must be a json object");
 
   Value mongodb;
   if (!get_object(root, "mongodb", mongodb))
@@ -257,6 +257,9 @@ void json_reader::load() {
   mongodb_config_ = new class mongodb_config;
   set_db_name(*mongodb_config_, mongodb_db_name);
   set_net_docker_name(*mongodb_config_, mongodb_net_docker_name);
+  set_net_docker_nw_name(*mongodb_config_, mongodb_net_docker_nw_name);
+  set_net_external_port(*mongodb_config_, mongodb_net_external_port);
+  set_net_docker_port(*mongodb_config_, mongodb_net_docker_port);
 }
 
 json_reader::~json_reader() {
