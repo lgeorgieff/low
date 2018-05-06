@@ -1,9 +1,9 @@
 #include "../config/json_reader.hpp"
+#include "http/service.hpp"
 
 #include <gflags/gflags.h>
 #include <glog/logging.h>
 
-#include <proxygen/httpserver/HTTPServer.h>
 #include <proxygen/httpserver/HTTPServerOptions.h>
 #include <proxygen/httpserver/RequestHandlerFactory.h>
 #include <proxygen/httpserver/ResponseBuilder.h>
@@ -13,15 +13,15 @@
 #include <mongocxx/client.hpp>
 #include <mongocxx/instance.hpp>
 
-#include <vector>
 #include <string>
 #include <iostream>
 
 using std::string;
 using std::cout;
 using std::endl;
-using std::vector;
-using std::thread;
+
+using low::http::service;
+using low::config::json_reader;
 
 const string CONFIG_FILE_PATH_DEFAULT("../config/main_config.json");
 DEFINE_string(config, CONFIG_FILE_PATH_DEFAULT, "Path to configuration file");
@@ -31,7 +31,7 @@ const string APPLICATION_VERSION("0.0.1");
 mongocxx::instance inst{};
 
 class HelloWorldHandler : public proxygen::RequestHandler {
-public:
+ public:
   explicit HelloWorldHandler() {}
 
   void onRequest(std::unique_ptr<proxygen::HTTPMessage> headers) noexcept {}
@@ -100,7 +100,7 @@ int main(int argc, char **argv) {
   gflags::ParseCommandLineFlags(&argc, &argv, true);
 
   // Load json configuration for this application.
-  low::config::json_reader config_reader(FLAGS_config);
+  json_reader config_reader(FLAGS_config);
   config_reader.load();
 
   if (config_reader.http_config().log_to_stderr() &&
@@ -113,32 +113,12 @@ int main(int argc, char **argv) {
       FLAGS_log_dir = config_reader.http_config().log_dir();
   }
 
-  proxygen::HTTPServerOptions options;
-  options.threads = config_reader.http_config().resources_http_threads();
-  options.idleTimeout = config_reader.http_config().resources_http_idle_timeout_ms();
-  options.shutdownOn = {SIGINT, SIGTERM};
-  options.enableContentCompression = config_reader.http_config().compression_enabled();
-  options.contentCompressionMinimumSize =
-      config_reader.http_config().compression_minimum_size_bytes();
-  options.contentCompressionLevel = config_reader.http_config().compression_level();
-  options.handlerFactories =
-      proxygen::RequestHandlerChain().addThen<HelloWorldHandlerFactory>().build();
-
-  // Set up an HTTP server instance.
-  proxygen::HTTPServer server(std::move(options));
-  vector<proxygen::HTTPServer::IPConfig> IPs = {
-      {folly::SocketAddress(config_reader.http_config().net_external_address(),
-                            config_reader.http_config().net_docker_port(), true),
-       proxygen::HTTPServer::Protocol::HTTP}};
-  server.bind(IPs);
-  LOG(INFO) << "HTTP server bound to " << config_reader.http_config().net_external_address() << ":"
+  service<HelloWorldHandlerFactory> http_service{config_reader.http_config()};
+  http_service.start();
+  LOG(INFO) << "server started on " << config_reader.http_config().net_external_address() << ":"
             << config_reader.http_config().net_docker_port();
-
-  // Start HTTPServer mainloop in a separate thread.
-  thread t([&]() { server.start(); });
-  LOG(INFO) << "server started";
-
-  t.join();
+  http_service.stop();
+  LOG(INFO) << "server stopped";
 
   gflags::ShutDownCommandLineFlags();
   return 0;
