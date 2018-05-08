@@ -11,7 +11,7 @@ namespace config {
 
 class json_reader : public config_factory {
  public:
-  json_reader(const std::string &json_file_path);
+  explicit json_reader(const std::string &json_file_path);
   json_reader(const json_reader &other) = default;
   json_reader(json_reader &&other) = default;
   ~json_reader();

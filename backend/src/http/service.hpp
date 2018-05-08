@@ -12,7 +12,7 @@ namespace http {
 template <typename HANDLER_FACTORY>
 class service {
  public:
-  service(const low::config::http_config &config);
+  explicit service(const low::config::http_config &config);
   service(const service &other);
   service(service &&other);
   ~service();
